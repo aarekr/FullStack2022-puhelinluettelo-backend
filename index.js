@@ -1,9 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(cors())
 
 let persons = [
     {
@@ -63,6 +65,7 @@ const generateId = () => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
+  console.log("backendin req.body:", body)
   if (!body.name) {
     return res.status(400).json({
       error: 'name missing'
@@ -97,7 +100,7 @@ const unknownEndpoint = (req, res) => {
 
 app.use(unknownEndpoint)
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
