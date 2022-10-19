@@ -1,0 +1,7 @@
+POST https://empty-snow-2913.fly.dev/api/persons
+Content-Type: application/json
+
+{
+  "name": "Pekka",
+  "number": "12345"
+}
