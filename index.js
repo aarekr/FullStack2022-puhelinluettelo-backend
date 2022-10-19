@@ -61,6 +61,25 @@ const generateId = () => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
+  if (!body.name) {
+    return res.status(400).json({
+      error: 'name missing'
+    })
+  }
+  if (!body.number) {
+    return res.status(400).json({
+      error: 'number missing'
+    })
+  }
+  let nimiJoLuettelossa = false
+  henkilo_loytyi = persons.map(person => {
+    person.name === body.name ? nimiJoLuettelossa = true : ""
+  })
+  if (nimiJoLuettelossa === true) {
+    return res.status(400).json({
+      error: 'person already added'
+    })
+  }
   const person = {
     name: body.name,
     number: body.number,
