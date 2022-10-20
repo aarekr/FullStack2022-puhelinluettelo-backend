@@ -48,16 +48,17 @@ const generateId = () => {
 app.post('/api/persons', (req, res) => {
   const body = req.body
   console.log("backendin req.body:", body)
-  if (!body.name) {
+  if (body.name === undefined) {
     return res.status(400).json({
       error: 'name missing'
     })
   }
-  if (!body.number) {
+  if (body.number === undefined) {
     return res.status(400).json({
       error: 'number missing'
     })
   }
+  /*
   let nimiJoLuettelossa = false
   henkilo_loytyi = persons.map(person => {
     person.name === body.name ? nimiJoLuettelossa = true : ""
@@ -67,13 +68,16 @@ app.post('/api/persons', (req, res) => {
       error: 'person already added'
     })
   }
-  const person = {
+  */
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId()
-  }
-  persons = persons.concat(person)
-  res.json(person)
+  })
+
+  person.save().then(savedPerson => {
+      res.json(savedPerson)
+      console.log(`added ${body.name} number ${body.number} to phonebook`)
+    })
 })
 
 const unknownEndpoint = (req, res) => {
