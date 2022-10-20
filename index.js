@@ -15,8 +15,11 @@ app.get('/', (req, res) => {
   res.send('<h1>Puhelinluettelo</h1>')
 })
 
-app.get('/info', (req, res) => {
-  res.send(`Phonebook has info for ${persons.length} people<br />${new Date()}`)
+app.get('/info', (req, res, next) => {
+  Person.find({}).then(mongo_people => {
+    res.send(`Phonebook has info for ${mongo_people.length} people<br />${new Date()}`)
+  })
+  .catch(error => next(error))
 })
 
 app.get('/api/persons', (req, res) => {
@@ -58,17 +61,7 @@ app.post('/api/persons', (req, res) => {
       error: 'number missing'
     })
   }
-  /*
-  let nimiJoLuettelossa = false
-  henkilo_loytyi = persons.map(person => {
-    person.name === body.name ? nimiJoLuettelossa = true : ""
-  })
-  if (nimiJoLuettelossa === true) {
-    return res.status(400).json({
-      error: 'person already added'
-    })
-  }
-  */
+
   const person = new Person({
     name: body.name,
     number: body.number,
@@ -92,6 +85,12 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
+  }
+  else if (error.name === 'TypeError') {
+    return res.status(400).send({ error: 'some character(s) wrong in the id' })
+  }
+  else if (error.name === 'ReferenceError') {
+    return res.status(400).send({ error: 'malformatted reference' })
   }
 
   next(error)
