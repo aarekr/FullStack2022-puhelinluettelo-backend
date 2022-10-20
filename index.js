@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.static('build'))
 
 app.get('/', (req, res) => {
-    res.send('<h1>Puhelinluettelo</h1>')
+  res.send('<h1>Puhelinluettelo</h1>')
 })
 
 app.get('/info', (req, res) => {
