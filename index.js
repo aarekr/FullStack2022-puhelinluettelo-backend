@@ -67,10 +67,12 @@ app.post('/api/persons', (req, res) => {
     number: body.number,
   })
 
-  person.save().then(savedPerson => {
+  person.save()
+    .then(savedPerson => {
       res.json(savedPerson)
       console.log(`added ${body.name} number ${body.number} to phonebook`)
     })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (req, res) => {
@@ -85,6 +87,9 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
+  }
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
   else if (error.name === 'TypeError') {
     return res.status(400).send({ error: 'some character(s) wrong in the id' })
