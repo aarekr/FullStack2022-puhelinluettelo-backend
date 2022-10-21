@@ -20,7 +20,7 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 if (nimi === undefined) {
-  console.log("phonebook:")
+  console.log('phonebook:')
   Person.find({}).then(result => {
     result.forEach(henk => {
       console.log(`${henk.name} ${henk.number}`)
@@ -36,6 +36,7 @@ if (nimi === undefined) {
   person.save()
     .then(result => {
       console.log(`added ${nimi} number ${numero} to phonebook`)
+      console.log('result:', result)
       mongoose.connection.close()
     })
 }

@@ -16,10 +16,11 @@ app.get('/', (req, res) => {
 })
 
 app.get('/info', (req, res, next) => {
-  Person.find({}).then(mongo_people => {
-    res.send(`Phonebook has info for ${mongo_people.length} people<br />${new Date()}`)
-  })
-  .catch(error => next(error))
+  Person.find({})
+    .then(mongo_people => {
+      res.send(`Phonebook has info for ${mongo_people.length} people<br />${new Date()}`)
+    })
+    .catch(error => next(error))
 })
 
 app.get('/api/persons', (req, res) => {
@@ -43,14 +44,15 @@ app.get('/api/persons/:id', (req, res, next) => {
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
     .then(result => {
+      console.log('result:', result)
       res.status(204).end()
     })
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
-  console.log("backendin req.body:", body)
+  console.log('backendin req.body:', body)
   if (body.name === undefined) {
     return res.status(400).json({
       error: 'name missing'
@@ -82,8 +84,8 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
-  console.error("error.message:", error.message)
-  console.error("error.name   :", error.name)
+  console.error('error.message:', error.message)
+  console.error('error.name   :', error.name)
 
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
@@ -105,5 +107,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
