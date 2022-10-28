@@ -52,7 +52,6 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 app.post('/api/persons', (req, res, next) => {
   const body = req.body
-  console.log('backendin req.body:', body)
   if (body.name === undefined) {
     return res.status(400).json({
       error: 'name missing'
@@ -73,6 +72,20 @@ app.post('/api/persons', (req, res, next) => {
     .then(savedPerson => {
       res.json(savedPerson)
       console.log(`added ${body.name} number ${body.number} to phonebook`)
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+  console.log('backend put body:', body)
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson)
     })
     .catch(error => next(error))
 })
